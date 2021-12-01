@@ -46,12 +46,14 @@ root@raspberrypi:~# ./test.sh
 Sim Number  = [89441000304200027130]
 Sim Status  = [READY]
 Reg State   = [REGISTERED-HOME]
+Modem Mode  = [FDD LTE]
 
 root@raspberrypi:~# cat test.sh
 source <(./modemstat2.sh -q)
 echo "Sim Number  = [$SIM]"
 echo "Sim Status  = [$SIMSTATUS]"
 echo "Reg State   = [$REGSTATE]"
+echo "Modem Mode  = [$MODEMMODE]"
 ```
 
 See source and PDF files for more details 
