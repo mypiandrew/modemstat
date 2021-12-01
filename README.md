@@ -4,7 +4,7 @@ ModemStatus Utility
 Gives modem status information, autodetects between Sierra Wireless/Quectel/Simcom modems
 
 ```
-root@raspberrypi:~# ./modemstat2.sh
+root@raspberrypi:~# ./modemstat.sh
 Modem Vendor                       : QUECTEL
 Modem IMEI Number                  : 234159548225248
 SIM ID Number                      : 89441000304200027130
@@ -26,7 +26,7 @@ Revision: EC25EFAR06A11M4G
 Running with -q dumps as bash variables
 
 ```
-root@raspberrypi:~# ./modemstat2.sh -q
+root@raspberrypi:~# ./modemstat.sh -q
 MODEMVENDOR=QUECTEL
 IMEI=234159548225248
 SIM=89441000304200027130
@@ -49,7 +49,7 @@ Reg State   = [REGISTERED-HOME]
 Modem Mode  = [FDD LTE]
 
 root@raspberrypi:~# cat test.sh
-source <(./modemstat2.sh -q)
+source <(./modemstat.sh -q)
 echo "Sim Number  = [$SIM]"
 echo "Sim Status  = [$SIMSTATUS]"
 echo "Reg State   = [$REGSTATE]"
