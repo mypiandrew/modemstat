@@ -262,22 +262,28 @@ elif [[ $COPS1 -eq 4 ]]; then
 fi
 
 
-if (( $COPS1 >= 0 )) || (( $COPS1 <= 4 ))
+if [ ! -z "$COPS1" ] 
 then
-		if [[ ${OUTPUT} -eq 0 ]] 
-		then 
-			echo "Network ID                         : ${COPS3}"
-		else
-			echo "NETWORKID='${COPS3}'"
-		fi
-else
-		if [[ ${OUTPUT} -eq 0 ]] 
-		then 
-			echo "Network ID                         : ** Information Not Available"
-		else
-			echo "NETWORKID=NOTAVAILABLE"
-		fi
+
+	if  (( $COPS1 >= 0 )) || (( $COPS1 <= 4 ))
+	then
+			if [[ ${OUTPUT} -eq 0 ]] 
+			then 
+				echo "Network ID                         : ${COPS3}"
+			else
+				echo "NETWORKID='${COPS3}'"
+			fi
+	else
+			if [[ ${OUTPUT} -eq 0 ]] 
+			then 
+				echo "Network ID                         : ** Information Not Available"
+			else
+				echo "NETWORKID=NOTAVAILABLE"
+			fi
+	fi
 fi
+
+
 
 #################### NETWORK REGISTRATION STATE
 
