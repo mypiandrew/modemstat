@@ -1,6 +1,6 @@
 #!/bin/bash
 ############################################################################
-# ModemStat -- Version 2.0.1
+# ModemStat -- Version 2.0.2
 #
 # Runs a series of diagnostic tests on the modem to determine what the
 #
@@ -43,10 +43,11 @@ fi
 
 #################### MODEM VENDOR CHECK
 
-chat -Vs TIMEOUT 10 ECHO OFF "" "ATI5" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+chat -Vs TIMEOUT 1 ECHO OFF "" "ATI5" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 REGEX_SIMCOM='.*SIMCOM.*'
 REGEX_QUECTEL='.*Quectel.*'
 REGEX_SIERRA='.*Sierra.*'
+REGEX_NIMBELINK='.*DOB*'
 
 RESPONSE=$(</tmp/log)
 
@@ -59,6 +60,9 @@ elif [[ $RESPONSE =~ $REGEX_SIMCOM ]] ; then
 elif [[ $RESPONSE =~ $REGEX_SIERRA ]] ; then
         MODEM=3   # SIERRA WIRELESS
         MODEMVENDOR="SIERRA-WIRELESS"
+elif [[ $RESPONSE =~ $REGEX_NIMBELINK ]] ; then
+        MODEM=4   # NIMBELINK
+        MODEMVENDOR="NIMBELINK TELIT LE910C"		
 else
         MODEM=0   # UNKNOWN
         MODEMVENDOR="UNKNOWN"
@@ -66,7 +70,7 @@ fi
 
 #################### MODEM IMEI NUMBER
 
-chat -Vs TIMEOUT 10 ECHO OFF "" "AT+CIMI" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+chat -Vs TIMEOUT 1 ECHO OFF "" "AT+CIMI" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
 REGEX='^([0-9]+)$'
 RESPONSE=`cat /tmp/log | head -n -1 | tail -n +2 | grep -v '^[[:space:]]*$'`
@@ -84,9 +88,9 @@ fi
 # Doesn't work on Sierra Wireless Modems
 if [[ $MODEM != 3 ]]
 then
-        chat -Vs TIMEOUT 10 ECHO OFF "" "AT+CCID" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+        chat -Vs TIMEOUT 1 ECHO OFF "" "AT+ICCID" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
-        REGEX='\+CCID: ([0-9]+)'
+        REGEX='\+ICCID: ([0-9]+)'
         RESPONSE=$(</tmp/log)
 
         SIMID=""
@@ -94,16 +98,14 @@ then
         if [[ $RESPONSE =~ $REGEX ]]
         then
                 SIMID="${BASH_REMATCH[1]}"
-        fi
-
-        #echo $SIMID
+        fi        
 fi
 
 #################### SIM &  PIN CHECK
 
 
 
-chat -Vs TIMEOUT 10 ECHO OFF "" "AT+CPIN?" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+chat -Vs TIMEOUT 1 ECHO OFF "" "AT+CPIN?" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
 REGEX='\+CPIN:.([a-zA-Z]*)'
 RESPONSE=$(</tmp/log)
@@ -134,7 +136,7 @@ fi
 
 
 
-chat -Vs TIMEOUT 10 ECHO OFF "" "AT+CSQ" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+chat -Vs TIMEOUT 1 ECHO OFF "" "AT+CSQ" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
 REGEX='\CSQ: ([0-9]*),([0-9]*)'
 RESPONSE=$(</tmp/log)
@@ -153,7 +155,7 @@ fi
 #################### NETWORK REGISTRATION MODE
 
 
-chat -Vs TIMEOUT 10 ECHO OFF "" "AT+COPS?" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+chat -Vs TIMEOUT 1 ECHO OFF "" "AT+COPS?" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
 REGEX='\+COPS:.([0-9]*),([0-9]*),"(.*)",([0-9]*)'
 RESPONSE=$(</tmp/log)
@@ -233,7 +235,7 @@ fi
 #################### NETWORK REGISTRATION STATE
 
 
-chat -Vs TIMEOUT 10 ECHO OFF "" "AT+CREG?" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+chat -Vs TIMEOUT 1 ECHO OFF "" "AT+CREG?" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
 REGEX='\+CREG: ([0-9]*),([0-9]*)'
 RESPONSE=$(</tmp/log)
@@ -296,7 +298,7 @@ fi
 ######## QUECTEL
 if [[ $MODEM -eq 1 ]] ; then
 
-        chat -Vs TIMEOUT 10 ECHO OFF "" "AT+QNWINFO" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+        chat -Vs TIMEOUT 1 ECHO OFF "" "AT+QNWINFO" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
         REGEX='\+QNWINFO: "(.+)","(.+)","(.+)",'
         RESPONSE=$(</tmp/log)
@@ -316,7 +318,7 @@ if [[ $MODEM -eq 1 ]] ; then
 elif [[ $MODEM -eq 2 ]]; then
 
 
-        chat -Vs TIMEOUT 10 ECHO OFF "" "AT+CNSMOD?" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+        chat -Vs TIMEOUT 1 ECHO OFF "" "AT+CNSMOD?" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
         REGEX='\+CNSMOD: ([0-9]),([0-9])'
         RESPONSE=$(</tmp/log)
@@ -376,7 +378,7 @@ elif [[ $MODEM -eq 2 ]]; then
 ######## SIERRA WIRELESS
 elif [[ $MODEM -eq 3 ]] ; then
 
-        chat -Vs TIMEOUT 10 ECHO OFF "" "AT*CNTI=0" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+        chat -Vs TIMEOUT 1 ECHO OFF "" "AT*CNTI=0" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
         REGEX='\*CNTI: ([0-9]+),([a-zA-Z]+)'
         RESPONSE=$(</tmp/log)
@@ -432,9 +434,12 @@ fi
 ##################### Display Modem Model Info
 if [[ ${OUTPUT} -eq 0 ]]
 then
-        chat -Vs TIMEOUT 10 ECHO OFF "" "ATI5" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+	if [[ $MODEM != 4 ]]
+	then
+        	chat -Vs TIMEOUT 1 ECHO OFF "" "ATI5" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
-        echo -e "Modem Specification   : \n"
-        cat /tmp/log | head -n -1 | tail -n +2 | grep -v '^[[:space:]]*$'
+        	echo -e "Modem Specification   : \n"
+        	cat /tmp/log | head -n -1 | tail -n +2 | grep -v '^[[:space:]]*$'
+	fi
 	echo
 fi
