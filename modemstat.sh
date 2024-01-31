@@ -70,7 +70,7 @@ fi
 
 #################### MODEM IMEI NUMBER
 
-chat -Vs TIMEOUT 1 ECHO OFF "" "AT+CIMI" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
+chat -Vs TIMEOUT 1 ECHO OFF "" "AT+GSN" "OK" >/dev/modemAT </dev/modemAT 2>/tmp/log
 
 REGEX='^([0-9]+)$'
 RESPONSE=`cat /tmp/log | head -n -1 | tail -n +2 | grep -v '^[[:space:]]*$'`
