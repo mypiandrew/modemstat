@@ -1,6 +1,6 @@
 #!/bin/bash
 ############################################################################
-# ModemStat -- Version 2.0.2
+# ModemStat -- Version 2.0.3
 #
 # Runs a series of diagnostic tests on the modem to determine what the
 #
