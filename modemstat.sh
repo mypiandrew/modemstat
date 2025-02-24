@@ -1,6 +1,6 @@
 #!/bin/bash
 ############################################################################
-# ModemStat -- Version 2.0.3
+# ModemStat -- Version 2.1.0
 #
 # Runs a series of diagnostic tests on the modem to determine what the
 #
@@ -274,7 +274,7 @@ then
                         REGSTATE="DENIED"
                 fi
 
-        elif [[ $CREG2 -eq 4 ]]; then
+        elif [[ $CREG2 -eq 5 ]]; then
                 if [[ ${OUTPUT} -eq 0 ]] ; then
                         REGSTATE="Registered, roaming"
                 else
